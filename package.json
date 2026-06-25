@@ -1,0 +1,27 @@
+{
+  "name": "grocery-inventory",
+  "version": "1.0.0",
+  "description": "An Inventory management app for an imaginary store",
+  "homepage": "https://github.com/mumtahinanur/grocery-inventory#readme",
+  "bugs": {
+    "url": "https://github.com/mumtahinanur/grocery-inventory/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mumtahinanur/grocery-inventory.git"
+  },
+  "license": "ISC",
+  "author": "Mumtahina Nur",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch --env-file=.env app.js",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "pg": "^8.22.0"
+  }
+}
