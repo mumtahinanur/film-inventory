@@ -1,5 +1,8 @@
 import express from "express";
 import path from "node:path";
+import filmsRouter from "./routes/filmsRouter.js";
+import genresRouter from "./routes/genresRouter.js";
+import directorsRouter from "./routes/directorsRouter.js";
 
 const app = express();
 
@@ -17,6 +20,9 @@ app.use(express.urlencoded({ extended: true })); // parses form POST data into r
 app.get("/", (req, res) => {
   res.render("index", { title: "Film Tracker" });
 });
+app.use("/films", filmsRouter);
+app.use("/genres", genresRouter);
+app.use("/directors", directorsRouter);
 
 app.listen(PORT, (error) => {
   if (error) {
