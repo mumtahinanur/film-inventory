@@ -1,11 +1,16 @@
+import * as queries from "../db/queries.js";
+
 export async function getAllFilms(req, res) {
-  // TODO: SELECT all films, maybe JOIN genres/directors
-  res.status(501).json({ message: "getAllFilms not implemented" });
+  const films = await queries.getAllFilms();
+  res.render("films/index", { films });
 }
 
 export async function getFilmById(req, res) {
-  // TODO: SELECT film by id, 404 if not found
-  res.status(501).json({ message: "getFilmById not implemented" });
+  const film = await queries.getFilmById(req.params.id);
+  if (!film) {
+    return res.status(404).render("error", { message: "Film not found" });
+  }
+  res.render("films/show", { film });
 }
 
 export async function createFilm(req, res) {

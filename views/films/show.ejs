@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= film.title %></title>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/films">Films</a>
+        <a href="/directors">Directors</a>
+        <a href="/genres">Genres</a>
+      </nav>
+
+      <a href="/films" class="back-link">← Back to Films</a>
+
+      <h1><%= film.title %></h1>
+
+      <div class="film-meta">
+        <p>
+          <strong>Release Year:</strong> <%= film.release_year %><br />
+          <strong>Runtime:</strong> <%= film.runtime_minutes %> minutes<br />
+          <strong>Added:</strong> <%= new Date(film.created_at).toLocaleDateString() %>
+        </p>
+      </div>
+
+      <% if (film.description) { %>
+      <div class="section">
+        <h2>Description</h2>
+        <p><%= film.description %></p>
+      </div>
+      <% } %>
+
+      <% if (film.directors && film.directors.length > 0) { %>
+      <div class="section">
+        <h2>Directors</h2>
+        <ul class="links">
+          <% film.directors.forEach(director => { %>
+          <li><a href="/directors/<%= director.id %>"><%= director.name %></a></li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
+
+      <% if (film.genres && film.genres.length > 0) { %>
+      <div class="section">
+        <h2>Genres</h2>
+        <ul class="links">
+          <% film.genres.forEach(genre => { %>
+          <li><a href="/genres/<%= genre.id %>"><%= genre.name %></a></li>
+          <% }); %>
+        </ul>
+      </div>
+      <% } %>
+    </div>
+  </body>
+</html>

@@ -1,5 +1,6 @@
 import express from "express";
 import path from "node:path";
+import homeRouter from "./routes/homeRouter.js";
 import filmsRouter from "./routes/filmsRouter.js";
 import genresRouter from "./routes/genresRouter.js";
 import directorsRouter from "./routes/directorsRouter.js";
@@ -17,9 +18,7 @@ app.use(express.static(path.join(import.meta.dirname, "public")));
 app.use(express.urlencoded({ extended: true })); // parses form POST data into req.body
 
 // Routes
-app.get("/", (req, res) => {
-  res.render("index", { title: "Film Tracker" });
-});
+app.use("/", homeRouter);
 app.use("/films", filmsRouter);
 app.use("/genres", genresRouter);
 app.use("/directors", directorsRouter);

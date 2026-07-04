@@ -1,9 +1,17 @@
+import * as queries from "../db/queries.js";
+
 export async function getAllDirectors(req, res) {
-  res.status(501).json({ message: "getAllDirectors not implemented" });
+  const directors = await queries.getAllDirectors();
+  res.render("directors/index", { directors });
 }
 
 export async function getDirectorById(req, res) {
-  res.status(501).json({ message: "getDirectorById not implemented" });
+  const director = await queries.getDirectorById(req.params.id);
+  if (!director) {
+    return res.status(404).render("error", { message: "Director not found" });
+  }
+  const films = await queries.getFilmsByDirectorId(req.params.id);
+  res.render("directors/show", { director, films });
 }
 
 export async function createDirector(req, res) {

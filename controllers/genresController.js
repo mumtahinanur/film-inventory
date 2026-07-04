@@ -1,9 +1,17 @@
+import * as queries from "../db/queries.js";
+
 export async function getAllGenres(req, res) {
-  res.status(501).json({ message: "getAllGenres not implemented" });
+  const genres = await queries.getAllGenres();
+  res.render("genres/index", { genres });
 }
 
 export async function getGenreById(req, res) {
-  res.status(501).json({ message: "getGenreById not implemented" });
+  const genre = await queries.getGenreById(req.params.id);
+  if (!genre) {
+    return res.status(404).render("error", { message: "Genre not found" });
+  }
+  const films = await queries.getFilmsByGenreId(req.params.id);
+  res.render("genres/show", { genre, films });
 }
 
 export async function createGenre(req, res) {

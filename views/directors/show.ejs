@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= director.name %></title>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/films">Films</a>
+        <a href="/directors">Directors</a>
+        <a href="/genres">Genres</a>
+      </nav>
+
+      <a href="/directors" class="back-link">← Back to Directors</a>
+
+      <h1><%= director.name %></h1>
+
+      <% if (director.bio) { %>
+      <div class="section">
+        <h2>Biography</h2>
+        <p><%= director.bio %></p>
+      </div>
+      <% } %>
+
+      <div class="section">
+        <h2>Films</h2>
+        <% if (films.length === 0) { %>
+        <div class="empty-message">No films found.</div>
+        <% } else { %>
+        <ul class="film-list">
+          <% films.forEach(film => { %>
+          <li class="film-item">
+            <h2><a href="/films/<%= film.id %>"><%= film.title %></a></h2>
+            <div class="film-meta">
+              <strong>Release Year:</strong> <%= film.release_year %> | <strong>Runtime:</strong> <%= film.runtime_minutes %> minutes
+            </div>
+            <% if (film.genres && film.genres.length > 0) { %>
+            <div class="tags">
+              <strong>Genres:</strong>
+              <% film.genres.forEach(genre => { %>
+              <a href="/genres/<%= genre.id %>" class="tag"><%= genre.name %></a>
+              <% }); %>
+            </div>
+            <% } %>
+          </li>
+          <% }); %>
+        </ul>
+        <% } %>
+      </div>
+    </div>
+  </body>
+</html>
