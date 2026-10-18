@@ -22,6 +22,10 @@ app.use("/", homeRouter);
 app.use("/films", filmsRouter);
 app.use("/genres", genresRouter);
 app.use("/directors", directorsRouter);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).render("errors/500", { message: "Something went wrong" });
+});
 
 app.listen(PORT, (error) => {
   if (error) {
