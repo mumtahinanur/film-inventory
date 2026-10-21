@@ -29,6 +29,8 @@ const FILM_SELECT = `
   FROM films f
 `;
 
+// Film related queries
+
 export async function getAllFilms() {
   const { rows } = await pool.query(`${FILM_SELECT} ORDER BY f.title`);
   return rows;
@@ -39,6 +41,8 @@ export async function getFilmById(id) {
   return rows[0];
 }
 
+// Genre related queries
+
 export async function getAllGenres() {
   const { rows } = await pool.query("SELECT * FROM genres ORDER BY name");
   return rows;
@@ -48,6 +52,21 @@ export async function getGenreById(id) {
   const { rows } = await pool.query("SELECT * FROM genres WHERE id = $1", [id]);
   return rows[0];
 }
+
+export async function getFilmsByGenreId(id) {
+  const { rows } = await pool.query(
+    `${FILM_SELECT}
+     WHERE EXISTS (
+       SELECT 1 FROM film_genres fg
+       WHERE fg.film_id = f.id AND fg.genre_id = $1
+     )
+     ORDER BY f.title`,
+    [id]
+  );
+  return rows;
+}
+
+// Director related queries
 
 export async function getAllDirectors() {
   const { rows } = await pool.query("SELECT * FROM directors ORDER BY name");
@@ -65,19 +84,6 @@ export async function getFilmsByDirectorId(id) {
      WHERE EXISTS (
        SELECT 1 FROM film_directors fd
        WHERE fd.film_id = f.id AND fd.director_id = $1
-     )
-     ORDER BY f.title`,
-    [id]
-  );
-  return rows;
-}
-
-export async function getFilmsByGenreId(id) {
-  const { rows } = await pool.query(
-    `${FILM_SELECT}
-     WHERE EXISTS (
-       SELECT 1 FROM film_genres fg
-       WHERE fg.film_id = f.id AND fg.genre_id = $1
      )
      ORDER BY f.title`,
     [id]
