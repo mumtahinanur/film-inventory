@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add a Film</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/films">Films</a>
+        <a href="/directors">Directors</a>
+        <a href="/genres">Genres</a>
+      </nav>
+
+      <a href="/films" class="back-link">← Back to Films</a>
+
+      <h1>Add a Film</h1>
+
+      <% if (errors.length > 0) { %>
+      <ul class="errors">
+        <% errors.forEach(error => { %>
+        <li><%= error %></li>
+        <% }); %>
+      </ul>
+      <% } %>
+
+      <%
+        const selectedGenres = [].concat(values.genre_ids ?? []).map(String);
+        const selectedDirectors = [].concat(values.director_ids ?? []).map(String);
+      %>
+      <form action="/films" method="POST">
+        <div class="field">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" maxlength="255" required value="<%= values.title ?? '' %>" />
+        </div>
+
+        <div class="field">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" rows="4"><%= values.description ?? '' %></textarea>
+        </div>
+
+        <div class="field">
+          <label for="release_year">Release Year</label>
+          <input type="number" id="release_year" name="release_year" min="1888" max="2100" value="<%= values.release_year ?? '' %>" />
+        </div>
+
+        <div class="field">
+          <label for="runtime_minutes">Runtime (minutes)</label>
+          <input type="number" id="runtime_minutes" name="runtime_minutes" min="1" max="32767" value="<%= values.runtime_minutes ?? '' %>" />
+        </div>
+
+        <fieldset class="field">
+          <legend>Genres</legend>
+          <% genres.forEach(genre => { %>
+          <label>
+            <input type="checkbox" name="genre_ids" value="<%= genre.id %>" <%= selectedGenres.includes(String(genre.id)) ? 'checked' : '' %> />
+            <%= genre.name %>
+          </label>
+          <% }); %>
+        </fieldset>
+
+        <fieldset class="field">
+          <legend>Directors</legend>
+          <% directors.forEach(director => { %>
+          <label>
+            <input type="checkbox" name="director_ids" value="<%= director.id %>" <%= selectedDirectors.includes(String(director.id)) ? 'checked' : '' %> />
+            <%= director.name %>
+          </label>
+          <% }); %>
+        </fieldset>
+
+        <button type="submit">Add Film</button>
+      </form>
+    </div>
+  </body>
+</html>

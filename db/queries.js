@@ -90,3 +90,38 @@ export async function getFilmsByDirectorId(id) {
   );
   return rows;
 }
+
+export async function createFilm({ title, description, releaseYear, runtimeMinutes, genreIds, directorIds }) {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const { rows } = await client.query(
+      `INSERT INTO films (title, description, release_year, runtime_minutes)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id`,
+      [title, description, releaseYear, runtimeMinutes]
+    );
+    const filmId = rows[0].id;
+    if (genreIds.length > 0) {
+      await client.query(
+        `INSERT INTO film_genres (film_id, genre_id)
+         SELECT $1, UNNEST($2::int[])`,
+        [filmId, genreIds]
+      );
+    }
+    if (directorIds.length > 0) {
+      await client.query(
+        `INSERT INTO film_directors (film_id, director_id)
+         SELECT $1, UNNEST($2::int[])`,
+        [filmId, directorIds]
+      );
+    }
+    await client.query("COMMIT");
+    return filmId;
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}
