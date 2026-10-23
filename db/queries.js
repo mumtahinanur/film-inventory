@@ -141,3 +141,11 @@ export async function createGenre({ name, description }) {
   );
   return rows[0].id;
 }
+
+export async function createDirector({ name, bio }) {
+  const { rows } = await pool.query(
+    "INSERT INTO directors (name, bio) VALUES ($1, $2) RETURNING id",
+    [name, bio]
+  );
+  return rows[0].id;
+}

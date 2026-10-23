@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add a Director</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/">Home</a>
+        <a href="/films">Films</a>
+        <a href="/directors">Directors</a>
+        <a href="/genres">Genres</a>
+      </nav>
+
+      <a href="/directors" class="back-link">← Back to Directors</a>
+
+      <h1>Add a Director</h1>
+
+      <% if (errors.length > 0) { %>
+      <ul class="errors">
+        <% errors.forEach(error => { %>
+        <li><%= error %></li>
+        <% }); %>
+      </ul>
+      <% } %>
+
+      <form action="/directors" method="POST">
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" maxlength="150" required value="<%= values.name ?? '' %>" />
+        </div>
+
+        <div class="field">
+          <label for="bio">Biography</label>
+          <textarea id="bio" name="bio" rows="4"><%= values.bio ?? '' %></textarea>
+        </div>
+
+        <button type="submit">Add Director</button>
+      </form>
+    </div>
+  </body>
+</html>

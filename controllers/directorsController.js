@@ -1,3 +1,4 @@
+import { matchedData, validationResult } from "express-validator";
 import * as queries from "../db/queries.js";
 
 export async function getAllDirectors(req, res) {
@@ -14,8 +15,25 @@ export async function getDirectorById(req, res) {
   res.render("directors/show", { director, films });
 }
 
+export function newDirectorForm(req, res) {
+  res.render("directors/new", { values: {}, errors: [] });
+}
+
 export async function createDirector(req, res) {
-  res.status(501).json({ message: "createDirector not implemented" });
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(400).render("directors/new", {
+      values: req.body,
+      errors: result.array().map((e) => e.msg),
+    });
+  }
+
+  const data = matchedData(req);
+  const directorId = await queries.createDirector({
+    name: data.name,
+    bio: data.bio || null,
+  });
+  res.redirect(`/directors/${directorId}`);
 }
 
 export async function updateDirector(req, res) {
