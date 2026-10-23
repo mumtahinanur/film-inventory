@@ -1,3 +1,4 @@
+import { matchedData, validationResult } from "express-validator";
 import * as queries from "../db/queries.js";
 
 export async function getAllGenres(req, res) {
@@ -14,8 +15,25 @@ export async function getGenreById(req, res) {
   res.render("genres/show", { genre, films });
 }
 
+export function newGenreForm(req, res) {
+  res.render("genres/new", { values: {}, errors: [] });
+}
+
 export async function createGenre(req, res) {
-  res.status(501).json({ message: "createGenre not implemented" });
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(400).render("genres/new", {
+      values: req.body,
+      errors: result.array().map((e) => e.msg),
+    });
+  }
+
+  const data = matchedData(req);
+  const genreId = await queries.createGenre({
+    name: data.name,
+    description: data.description || null,
+  });
+  res.redirect(`/genres/${genreId}`);
 }
 
 export async function updateGenre(req, res) {

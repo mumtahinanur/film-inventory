@@ -125,3 +125,19 @@ export async function createFilm({ title, description, releaseYear, runtimeMinut
     client.release();
   }
 }
+
+export async function genreNameExists(name) {
+  const { rows } = await pool.query(
+    "SELECT 1 FROM genres WHERE LOWER(name) = LOWER($1)",
+    [name]
+  );
+  return rows.length > 0;
+}
+
+export async function createGenre({ name, description }) {
+  const { rows } = await pool.query(
+    "INSERT INTO genres (name, description) VALUES ($1, $2) RETURNING id",
+    [name, description]
+  );
+  return rows[0].id;
+}
