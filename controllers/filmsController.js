@@ -14,12 +14,12 @@ export async function getFilmById(req, res) {
   res.render("films/show", { film });
 }
 
-async function renderFilmForm(res, { values = {}, errors = [], status = 200 } = {}) {
+async function renderFilmForm(res, { values = {}, errors = [], status = 200, ...formOptions } = {}) {
   const [genres, directors] = await Promise.all([
     queries.getAllGenres(),
     queries.getAllDirectors(),
   ]);
-  res.status(status).render("films/new", { genres, directors, values, errors });
+  res.status(status).render("films/new", { genres, directors, values, errors, ...formOptions });
 }
 
 export async function newFilmForm(req, res) {
@@ -48,9 +48,59 @@ export async function createFilm(req, res) {
   res.redirect(`/films/${filmId}`);
 }
 
+function editFormOptions(id) {
+  return {
+    heading: "Edit Film",
+    action: `/films/${id}/edit`,
+    submitLabel: "Save Changes",
+    backHref: `/films/${id}`,
+    backLabel: "← Back to Film",
+  };
+}
+
+export async function editFilmForm(req, res) {
+  const film = await queries.getFilmById(req.params.id);
+  if (!film) {
+    return res.status(404).render("error", { message: "Film not found" });
+  }
+  await renderFilmForm(res, {
+    values: {
+      title: film.title,
+      description: film.description,
+      release_year: film.release_year,
+      runtime_minutes: film.runtime_minutes,
+      genre_ids: film.genres.map((g) => g.id),
+      director_ids: film.directors.map((d) => d.id),
+    },
+    ...editFormOptions(film.id),
+  });
+}
+
 export async function updateFilm(req, res) {
-  // TODO: UPDATE film by id
-  res.status(501).json({ message: "updateFilm not implemented" });
+  const { id } = req.params;
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return renderFilmForm(res, {
+      values: req.body,
+      errors: [...new Set(result.array().map((e) => e.msg))],
+      status: 400,
+      ...editFormOptions(id),
+    });
+  }
+
+  const data = matchedData(req);
+  const updated = await queries.updateFilm(id, {
+    title: data.title,
+    description: data.description || null,
+    releaseYear: data.release_year ?? null,
+    runtimeMinutes: data.runtime_minutes ?? null,
+    genreIds: [...new Set(data.genre_ids)],
+    directorIds: [...new Set(data.director_ids)],
+  });
+  if (!updated) {
+    return res.status(404).render("error", { message: "Film not found" });
+  }
+  res.redirect(`/films/${id}`);
 }
 
 export async function deleteFilm(req, res) {

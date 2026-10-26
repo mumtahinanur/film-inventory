@@ -126,6 +126,46 @@ export async function createFilm({ title, description, releaseYear, runtimeMinut
   }
 }
 
+export async function updateFilm(id, { title, description, releaseYear, runtimeMinutes, genreIds, directorIds }) {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const { rowCount } = await client.query(
+      `UPDATE films
+       SET title = $2, description = $3, release_year = $4, runtime_minutes = $5
+       WHERE id = $1`,
+      [id, title, description, releaseYear, runtimeMinutes]
+    );
+    if (rowCount === 0) {
+      await client.query("ROLLBACK");
+      return false;
+    }
+    await client.query("DELETE FROM film_genres WHERE film_id = $1", [id]);
+    await client.query("DELETE FROM film_directors WHERE film_id = $1", [id]);
+    if (genreIds.length > 0) {
+      await client.query(
+        `INSERT INTO film_genres (film_id, genre_id)
+         SELECT $1, UNNEST($2::int[])`,
+        [id, genreIds]
+      );
+    }
+    if (directorIds.length > 0) {
+      await client.query(
+        `INSERT INTO film_directors (film_id, director_id)
+         SELECT $1, UNNEST($2::int[])`,
+        [id, directorIds]
+      );
+    }
+    await client.query("COMMIT");
+    return true;
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 export async function genreNameExists(name) {
   const { rows } = await pool.query(
     "SELECT 1 FROM genres WHERE LOWER(name) = LOWER($1)",

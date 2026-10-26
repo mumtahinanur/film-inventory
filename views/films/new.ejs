@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add a Film</title>
+    <title><%= locals.heading ?? 'Add a Film' %></title>
   </head>
   <body>
     <div class="container">
@@ -14,9 +14,9 @@
         <a href="/genres">Genres</a>
       </nav>
 
-      <a href="/films" class="back-link">← Back to Films</a>
+      <a href="<%= locals.backHref ?? '/films' %>" class="back-link"><%= locals.backLabel ?? '← Back to Films' %></a>
 
-      <h1>Add a Film</h1>
+      <h1><%= locals.heading ?? 'Add a Film' %></h1>
 
       <% if (errors.length > 0) { %>
       <ul class="errors">
@@ -30,7 +30,7 @@
         const selectedGenres = [].concat(values.genre_ids ?? []).map(String);
         const selectedDirectors = [].concat(values.director_ids ?? []).map(String);
       %>
-      <form action="/films" method="POST">
+      <form action="<%= locals.action ?? '/films' %>" method="POST">
         <div class="field">
           <label for="title">Title</label>
           <input type="text" id="title" name="title" maxlength="255" required value="<%= values.title ?? '' %>" />
@@ -71,7 +71,7 @@
           <% }); %>
         </fieldset>
 
-        <button type="submit">Add Film</button>
+        <button type="submit"><%= locals.submitLabel ?? 'Add Film' %></button>
       </form>
     </div>
   </body>
