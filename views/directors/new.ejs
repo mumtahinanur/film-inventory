@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add a Director</title>
+    <title><%= locals.heading ?? 'Add a Director' %></title>
   </head>
   <body>
     <div class="container">
@@ -14,9 +14,9 @@
         <a href="/genres">Genres</a>
       </nav>
 
-      <a href="/directors" class="back-link">← Back to Directors</a>
+      <a href="<%= locals.backHref ?? '/directors' %>" class="back-link"><%= locals.backLabel ?? '← Back to Directors' %></a>
 
-      <h1>Add a Director</h1>
+      <h1><%= locals.heading ?? 'Add a Director' %></h1>
 
       <% if (errors.length > 0) { %>
       <ul class="errors">
@@ -26,7 +26,7 @@
       </ul>
       <% } %>
 
-      <form action="/directors" method="POST">
+      <form action="<%= locals.action ?? '/directors' %>" method="POST">
         <div class="field">
           <label for="name">Name</label>
           <input type="text" id="name" name="name" maxlength="150" required value="<%= values.name ?? '' %>" />
@@ -37,7 +37,7 @@
           <textarea id="bio" name="bio" rows="4"><%= values.bio ?? '' %></textarea>
         </div>
 
-        <button type="submit">Add Director</button>
+        <button type="submit"><%= locals.submitLabel ?? 'Add Director' %></button>
       </form>
     </div>
   </body>

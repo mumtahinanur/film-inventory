@@ -7,8 +7,11 @@ const router = Router();
 router.get("/", directorsController.getAllDirectors);
 router.get("/new", directorsController.newDirectorForm);
 router.get("/:id", directorsController.getDirectorById);
+router.get("/:id/edit", directorsController.editDirectorForm);
 router.post("/", validateDirector, directorsController.createDirector);
-router.put("/:id", directorsController.updateDirector);
+// HTML forms can't send PUT, so the edit form POSTs to /:id/edit
+router.post("/:id/edit", validateDirector, directorsController.updateDirector);
+router.put("/:id", validateDirector, directorsController.updateDirector);
 router.delete("/:id", directorsController.deleteDirector);
 
 export default router;

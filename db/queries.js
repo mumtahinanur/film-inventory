@@ -190,6 +190,14 @@ export async function createGenre({ name, description }) {
   return rows[0].id;
 }
 
+export async function updateDirector(id, { name, bio }) {
+  const { rowCount } = await pool.query(
+    "UPDATE directors SET name = $1, bio = $2 WHERE id = $3",
+    [name, bio, id]
+  );
+  return rowCount > 0;
+}
+
 export async function createDirector({ name, bio }) {
   const { rows } = await pool.query(
     "INSERT INTO directors (name, bio) VALUES ($1, $2) RETURNING id",
