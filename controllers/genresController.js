@@ -36,8 +36,48 @@ export async function createGenre(req, res) {
   res.redirect(`/genres/${genreId}`);
 }
 
+function editFormOptions(id) {
+  return {
+    heading: "Edit Genre",
+    action: `/genres/${id}/edit`,
+    submitLabel: "Save Changes",
+    backHref: `/genres/${id}`,
+    backLabel: "← Back to Genre",
+  };
+}
+
+export async function editGenreForm(req, res) {
+  const genre = await queries.getGenreById(req.params.id);
+  if (!genre) {
+    return res.status(404).render("error", { message: "Genre not found" });
+  }
+  res.render("genres/new", {
+    values: { name: genre.name, description: genre.description },
+    errors: [],
+    ...editFormOptions(genre.id),
+  });
+}
+
 export async function updateGenre(req, res) {
-  res.status(501).json({ message: "updateGenre not implemented" });
+  const { id } = req.params;
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(400).render("genres/new", {
+      values: req.body,
+      errors: [...new Set(result.array().map((e) => e.msg))],
+      ...editFormOptions(id),
+    });
+  }
+
+  const data = matchedData(req);
+  const updated = await queries.updateGenre(id, {
+    name: data.name,
+    description: data.description || null,
+  });
+  if (!updated) {
+    return res.status(404).render("error", { message: "Genre not found" });
+  }
+  res.redirect(`/genres/${id}`);
 }
 
 export async function deleteGenre(req, res) {

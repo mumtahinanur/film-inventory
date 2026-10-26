@@ -166,12 +166,20 @@ export async function updateFilm(id, { title, description, releaseYear, runtimeM
   }
 }
 
-export async function genreNameExists(name) {
+export async function genreNameExists(name, excludeId = null) {
   const { rows } = await pool.query(
-    "SELECT 1 FROM genres WHERE LOWER(name) = LOWER($1)",
-    [name]
+    "SELECT 1 FROM genres WHERE LOWER(name) = LOWER($1) AND ($2::int IS NULL OR id <> $2)",
+    [name, excludeId]
   );
   return rows.length > 0;
+}
+
+export async function updateGenre(id, { name, description }) {
+  const { rowCount } = await pool.query(
+    "UPDATE genres SET name = $1, description = $2 WHERE id = $3",
+    [name, description, id]
+  );
+  return rowCount > 0;
 }
 
 export async function createGenre({ name, description }) {
