@@ -20,6 +20,14 @@
 
       <a href="/genres/<%= genre.id %>/edit">Edit Genre</a>
 
+      <form
+        action="/genres/<%= genre.id %>/delete"
+        method="POST"
+        onsubmit="return confirm('Delete this genre? Films will be kept but unlinked from it.');"
+      >
+        <button type="submit">Delete Genre</button>
+      </form>
+
       <% if (genre.description) { %>
       <div class="section">
         <h2>Description</h2>

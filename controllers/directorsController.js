@@ -81,5 +81,9 @@ export async function updateDirector(req, res) {
 }
 
 export async function deleteDirector(req, res) {
-  res.status(501).json({ message: "deleteDirector not implemented" });
+  const deleted = await queries.deleteDirector(req.params.id);
+  if (!deleted) {
+    return res.status(404).render("error", { message: "Director not found" });
+  }
+  res.redirect("/directors");
 }

@@ -81,5 +81,9 @@ export async function updateGenre(req, res) {
 }
 
 export async function deleteGenre(req, res) {
-  res.status(501).json({ message: "deleteGenre not implemented" });
+  const deleted = await queries.deleteGenre(req.params.id);
+  if (!deleted) {
+    return res.status(404).render("error", { message: "Genre not found" });
+  }
+  res.redirect("/genres");
 }

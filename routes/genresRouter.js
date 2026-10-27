@@ -11,6 +11,8 @@ router.get("/:id/edit", genresController.editGenreForm);
 router.post("/", validateGenre, genresController.createGenre);
 // HTML forms can't send PUT, so the edit form POSTs to /:id/edit
 router.post("/:id/edit", validateGenre, genresController.updateGenre);
+// HTML forms can't send DELETE, so the delete button POSTs to /:id/delete
+router.post("/:id/delete", genresController.deleteGenre);
 router.put("/:id", validateGenre, genresController.updateGenre);
 router.delete("/:id", genresController.deleteGenre);
 

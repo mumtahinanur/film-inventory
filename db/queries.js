@@ -188,6 +188,12 @@ export async function updateGenre(id, { name, description }) {
   return rowCount > 0;
 }
 
+export async function deleteGenre(id) {
+  // film_genres rows are removed via ON DELETE CASCADE; films are kept
+  const { rowCount } = await pool.query("DELETE FROM genres WHERE id = $1", [id]);
+  return rowCount > 0;
+}
+
 export async function createGenre({ name, description }) {
   const { rows } = await pool.query(
     "INSERT INTO genres (name, description) VALUES ($1, $2) RETURNING id",
@@ -201,6 +207,12 @@ export async function updateDirector(id, { name, bio }) {
     "UPDATE directors SET name = $1, bio = $2 WHERE id = $3",
     [name, bio, id]
   );
+  return rowCount > 0;
+}
+
+export async function deleteDirector(id) {
+  // film_directors rows are removed via ON DELETE CASCADE; films are kept
+  const { rowCount } = await pool.query("DELETE FROM directors WHERE id = $1", [id]);
   return rowCount > 0;
 }
 

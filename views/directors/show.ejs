@@ -20,6 +20,14 @@
 
       <a href="/directors/<%= director.id %>/edit">Edit Director</a>
 
+      <form
+        action="/directors/<%= director.id %>/delete"
+        method="POST"
+        onsubmit="return confirm('Delete this director? Films will be kept but unlinked from them.');"
+      >
+        <button type="submit">Delete Director</button>
+      </form>
+
       <% if (director.bio) { %>
       <div class="section">
         <h2>Biography</h2>
