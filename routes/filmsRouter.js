@@ -11,6 +11,8 @@ router.get("/:id/edit", filmsController.editFilmForm);
 router.post("/", validateFilm, filmsController.createFilm);
 // HTML forms can't send PUT, so the edit form POSTs to /:id/edit
 router.post("/:id/edit", validateFilm, filmsController.updateFilm);
+// HTML forms can't send DELETE, so the delete button POSTs to /:id/delete
+router.post("/:id/delete", filmsController.deleteFilm);
 router.put("/:id", validateFilm, filmsController.updateFilm);
 router.delete("/:id", filmsController.deleteFilm);
 

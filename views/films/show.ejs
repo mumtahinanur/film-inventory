@@ -20,6 +20,14 @@
 
       <a href="/films/<%= film.id %>/edit">Edit Film</a>
 
+      <form
+        action="/films/<%= film.id %>/delete"
+        method="POST"
+        onsubmit="return confirm('Delete this film? This cannot be undone.');"
+      >
+        <button type="submit">Delete Film</button>
+      </form>
+
       <div class="film-meta">
         <p>
           <strong>Release Year:</strong> <%= film.release_year %><br />

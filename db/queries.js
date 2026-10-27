@@ -166,6 +166,12 @@ export async function updateFilm(id, { title, description, releaseYear, runtimeM
   }
 }
 
+export async function deleteFilm(id) {
+  // film_genres / film_directors rows are removed via ON DELETE CASCADE
+  const { rowCount } = await pool.query("DELETE FROM films WHERE id = $1", [id]);
+  return rowCount > 0;
+}
+
 export async function genreNameExists(name, excludeId = null) {
   const { rows } = await pool.query(
     "SELECT 1 FROM genres WHERE LOWER(name) = LOWER($1) AND ($2::int IS NULL OR id <> $2)",

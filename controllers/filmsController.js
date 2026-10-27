@@ -104,6 +104,9 @@ export async function updateFilm(req, res) {
 }
 
 export async function deleteFilm(req, res) {
-  // TODO: DELETE film by id (join tables cascade)
-  res.status(501).json({ message: "deleteFilm not implemented" });
+  const deleted = await queries.deleteFilm(req.params.id);
+  if (!deleted) {
+    return res.status(404).render("error", { message: "Film not found" });
+  }
+  res.redirect("/films");
 }
