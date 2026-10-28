@@ -27,5 +27,5 @@ Express 5 + EJS + `pg` (no ORM), ES modules (`"type": "module"`), server-rendere
 
 - HTML forms can't send PUT/DELETE and no method-override middleware is installed, so all three resources use POST routes for browser forms: `POST /<x>/:id/edit` (update) and `POST /<x>/:id/delete` (delete, redirects to the index, 404 via `error` view if missing). The `PUT /:id` and `DELETE /:id` routes map to the same controllers but aren't used by the views. Deleting a film, genre or director relies on `ON DELETE CASCADE` for the join tables; deleting a genre/director only unlinks it from films, the films stay.
 - The error-handling middleware in `app.js` renders `errors/500`, but only `views/error.ejs` exists (controllers render `error` for 404s) — the 500 view is missing.
-- `express.static` serves `public/`, which does not exist yet.
+- `express.static` serves `public/`, which holds the single stylesheet `public/style.css` (plain CSS, CSS variables in `:root`, one declaration per line, sectioned with comments). Every view links it in `<head>` via `<link rel="stylesheet" href="/style.css" />` — add that line to any new view. Keep the look minimal and classy: warm off-white, Georgia serif, muted gold accent, no frameworks.
 - `package.json` metadata (description, repo URLs) refers to a "grocery-inventory" project; it is stale.

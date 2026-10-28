@@ -1,0 +1,227 @@
+/* ---------- Variables ---------- */
+
+:root {
+  --bg: #faf8f5;
+  --text: #2b2b2b;
+  --muted: #7a746c;
+  --line: #e4ded5;
+  --accent: #8a6d3b;
+  --danger: #a33;
+
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: Helvetica, Arial, sans-serif;
+}
+
+/* ---------- Base ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- Headings ---------- */
+
+h1,
+h2 {
+  font-weight: normal;
+  letter-spacing: 0.02em;
+}
+
+h1 {
+  margin: 1.5rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 2.2rem;
+}
+
+h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.3rem;
+}
+
+/* ---------- Navigation and links ---------- */
+
+nav {
+  display: flex;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+nav a {
+  color: var(--muted);
+}
+
+nav a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.add-link,
+.back-link {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+.add-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.links a {
+  margin-right: 1rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+/* ---------- Lists ---------- */
+
+ul {
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.film-item,
+.genre-item,
+.director-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.section {
+  margin: 1.5rem 0;
+}
+
+/* ---------- Meta text and tags ---------- */
+
+.film-meta,
+.tags,
+.empty-message {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.tag {
+  display: inline-block;
+  margin-right: 0.4rem;
+  padding: 0 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+/* ---------- Errors ---------- */
+
+.errors,
+.error-message {
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--danger);
+  background: #f6ebe9;
+  color: var(--danger);
+}
+
+/* ---------- Forms ---------- */
+
+.field {
+  margin-bottom: 1.25rem;
+  padding: 0;
+  border: 0;
+}
+
+label,
+legend {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Checkbox labels read as normal text, side by side */
+fieldset label {
+  display: inline-block;
+  margin-right: 1rem;
+  color: var(--text);
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ---------- Buttons ---------- */
+
+button {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid var(--text);
+  background: var(--text);
+  color: var(--bg);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+/* Delete buttons: outlined in red until hovered */
+form[action$="/delete"] button {
+  border-color: var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+form[action$="/delete"] button:hover {
+  background: var(--danger);
+  color: #fff;
+}
