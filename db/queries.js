@@ -1,5 +1,13 @@
 import pool from "./pool.js";
 
+// All SQL lives here, grouped by resource. Within each section: reads, create,
+// update, delete.
+
+
+
+// ---------- Films ----------
+
+
 // Base query for reading films. Genres and directors are folded into JSON arrays
 // by subqueries (COALESCE gives [] when there are none), so each film is exactly
 // one row. Append a WHERE/ORDER BY clause.
@@ -32,8 +40,6 @@ const FILM_SELECT = `
   FROM films f
 `;
 
-// Film related queries
-
 export async function getAllFilms() {
   const { rows } = await pool.query(`${FILM_SELECT} ORDER BY f.title`);
   return rows;
@@ -42,56 +48,6 @@ export async function getAllFilms() {
 export async function getFilmById(id) {
   const { rows } = await pool.query(`${FILM_SELECT} WHERE f.id = $1`, [id]);
   return rows[0];
-}
-
-// Genre related queries
-
-export async function getAllGenres() {
-  const { rows } = await pool.query("SELECT * FROM genres ORDER BY name");
-  return rows;
-}
-
-export async function getGenreById(id) {
-  const { rows } = await pool.query("SELECT * FROM genres WHERE id = $1", [id]);
-  return rows[0];
-}
-
-export async function getFilmsByGenreId(id) {
-  const { rows } = await pool.query(
-    `${FILM_SELECT}
-     WHERE EXISTS (
-       SELECT 1 FROM film_genres fg
-       WHERE fg.film_id = f.id AND fg.genre_id = $1
-     )
-     ORDER BY f.title`,
-    [id]
-  );
-  return rows;
-}
-
-// Director related queries
-
-export async function getAllDirectors() {
-  const { rows } = await pool.query("SELECT * FROM directors ORDER BY name");
-  return rows;
-}
-
-export async function getDirectorById(id) {
-  const { rows } = await pool.query("SELECT * FROM directors WHERE id = $1", [id]);
-  return rows[0];
-}
-
-export async function getFilmsByDirectorId(id) {
-  const { rows } = await pool.query(
-    `${FILM_SELECT}
-     WHERE EXISTS (
-       SELECT 1 FROM film_directors fd
-       WHERE fd.film_id = f.id AND fd.director_id = $1
-     )
-     ORDER BY f.title`,
-    [id]
-  );
-  return rows;
 }
 
 // Film row and join-table rows are written in one transaction so a failure
@@ -178,6 +134,34 @@ export async function deleteFilm(id) {
   return rowCount > 0;
 }
 
+
+
+// ---------- Genres ----------
+
+
+export async function getAllGenres() {
+  const { rows } = await pool.query("SELECT * FROM genres ORDER BY name");
+  return rows;
+}
+
+export async function getGenreById(id) {
+  const { rows } = await pool.query("SELECT * FROM genres WHERE id = $1", [id]);
+  return rows[0];
+}
+
+export async function getFilmsByGenreId(id) {
+  const { rows } = await pool.query(
+    `${FILM_SELECT}
+     WHERE EXISTS (
+       SELECT 1 FROM film_genres fg
+       WHERE fg.film_id = f.id AND fg.genre_id = $1
+     )
+     ORDER BY f.title`,
+    [id]
+  );
+  return rows;
+}
+
 // Case-insensitive duplicate check. excludeId lets an edit keep its own name
 // (null on create).
 export async function genreNameExists(name, excludeId = null) {
@@ -186,6 +170,14 @@ export async function genreNameExists(name, excludeId = null) {
     [name, excludeId]
   );
   return rows.length > 0;
+}
+
+export async function createGenre({ name, description }) {
+  const { rows } = await pool.query(
+    "INSERT INTO genres (name, description) VALUES ($1, $2) RETURNING id",
+    [name, description]
+  );
+  return rows[0].id;
 }
 
 export async function updateGenre(id, { name, description }) {
@@ -202,10 +194,38 @@ export async function deleteGenre(id) {
   return rowCount > 0;
 }
 
-export async function createGenre({ name, description }) {
+
+
+// ---------- Directors ----------
+
+
+export async function getAllDirectors() {
+  const { rows } = await pool.query("SELECT * FROM directors ORDER BY name");
+  return rows;
+}
+
+export async function getDirectorById(id) {
+  const { rows } = await pool.query("SELECT * FROM directors WHERE id = $1", [id]);
+  return rows[0];
+}
+
+export async function getFilmsByDirectorId(id) {
   const { rows } = await pool.query(
-    "INSERT INTO genres (name, description) VALUES ($1, $2) RETURNING id",
-    [name, description]
+    `${FILM_SELECT}
+     WHERE EXISTS (
+       SELECT 1 FROM film_directors fd
+       WHERE fd.film_id = f.id AND fd.director_id = $1
+     )
+     ORDER BY f.title`,
+    [id]
+  );
+  return rows;
+}
+
+export async function createDirector({ name, bio }) {
+  const { rows } = await pool.query(
+    "INSERT INTO directors (name, bio) VALUES ($1, $2) RETURNING id",
+    [name, bio]
   );
   return rows[0].id;
 }
@@ -222,12 +242,4 @@ export async function deleteDirector(id) {
   // film_directors rows are removed via ON DELETE CASCADE; films are kept
   const { rowCount } = await pool.query("DELETE FROM directors WHERE id = $1", [id]);
   return rowCount > 0;
-}
-
-export async function createDirector({ name, bio }) {
-  const { rows } = await pool.query(
-    "INSERT INTO directors (name, bio) VALUES ($1, $2) RETURNING id",
-    [name, bio]
-  );
-  return rows[0].id;
 }

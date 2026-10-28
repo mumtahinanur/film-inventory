@@ -18,7 +18,7 @@ Express 5 + EJS + `pg` (no ORM), ES modules (`"type": "module"`), server-rendere
 `routes/<x>Router.js` → `validators/<x>Validator.js` (express-validator chain, used on POST) → `controllers/<x>Controller.js` → `db/queries.js` → `views/<x>/{index,show,new}.ejs`
 
 - `app.js` mounts the routers at `/films`, `/genres`, `/directors`, plus `/` for home.
-- `db/queries.js` holds all SQL (shared `pool` from `db/pool.js`). Films are read via a shared `FILM_SELECT` that aggregates genres/directors into JSON arrays via subqueries; multi-table writes (e.g. `createFilm`) use a transaction on a dedicated client.
+- `db/queries.js` holds all SQL (shared `pool` from `db/pool.js`), in one section per resource (Films, Genres, Directors), each ordered reads, create, update, delete; add new queries in the matching section. Films are read via a shared `FILM_SELECT` that aggregates genres/directors into JSON arrays via subqueries; multi-table writes (e.g. `createFilm`) use a transaction on a dedicated client.
 - Schema: `films`, `genres`, `directors`, with many-to-many join tables `film_genres` and `film_directors` (`ON DELETE CASCADE`). Schema lives only in `db/populatedb.js`.
 - Form pattern (see `filmsController.createFilm`): on validation failure, re-render the `new` view with status 400, the submitted `values`, and a de-duplicated `errors` array of messages; on success use `matchedData(req)` (sanitized/typed values) and redirect to the show page.
 - Error handling in `app.js`: unmatched URLs get a 404 and thrown errors a 500, both rendering `views/error.ejs`. Non-numeric ids (e.g. `/films/abc`) are not guarded: Postgres throws and the user gets the 500 page.
