@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `node db/populatedb.js <connection-string>` — create tables (idempotent) and seed dummy data only if `films` is empty
 - No test or lint tooling is configured.
 
-Requires a `.env` with `PORT` (default 8000), `DATABASE_URL` (PostgreSQL) and `ADMIN_PASSWORD` (see Admin password below).
+Copy `.env.example` to `.env` and fill it in. Requires `PORT` (default 8000), `DATABASE_URL` (PostgreSQL) and `ADMIN_PASSWORD` (see Admin password below).
 
 ## Architecture
 
@@ -21,6 +21,7 @@ Express 5 + EJS + `pg` (no ORM), ES modules (`"type": "module"`), server-rendere
 - `db/queries.js` holds all SQL (shared `pool` from `db/pool.js`). Films are read via a shared `FILM_SELECT` that aggregates genres/directors into JSON arrays via subqueries; multi-table writes (e.g. `createFilm`) use a transaction on a dedicated client.
 - Schema: `films`, `genres`, `directors`, with many-to-many join tables `film_genres` and `film_directors` (`ON DELETE CASCADE`). Schema lives only in `db/populatedb.js`.
 - Form pattern (see `filmsController.createFilm`): on validation failure, re-render the `new` view with status 400, the submitted `values`, and a de-duplicated `errors` array of messages; on success use `matchedData(req)` (sanitized/typed values) and redirect to the show page.
+- Error handling in `app.js`: unmatched URLs get a 404 and thrown errors a 500, both rendering `views/error.ejs`. Non-numeric ids (e.g. `/films/abc`) are not guarded: Postgres throws and the user gets the 500 page.
 - Express 5 handles rejected promises from async handlers automatically, so controllers don't wrap in try/catch.
 
 ## Admin password (stopgap until real users)
@@ -35,6 +36,4 @@ Edits and deletes are gated by one shared secret, `ADMIN_PASSWORD`; creating sta
 ## Known state / gotchas
 
 - HTML forms can't send PUT/DELETE and no method-override middleware is installed, so all three resources use POST routes for browser forms: `POST /<x>/:id/edit` (update) and `POST /<x>/:id/delete` (delete, redirects to the index, 404 via `error` view if missing). The `PUT /:id` and `DELETE /:id` routes map to the same controllers but aren't used by the views. Deleting a film, genre or director relies on `ON DELETE CASCADE` for the join tables; deleting a genre/director only unlinks it from films, the films stay.
-- The error-handling middleware in `app.js` renders `errors/500`, but only `views/error.ejs` exists (controllers render `error` for 404s) — the 500 view is missing.
-- `express.static` serves `public/`, which holds the single stylesheet `public/style.css` (plain CSS, CSS variables in `:root`, one declaration per line, sectioned with comments). Every view links it in `<head>` via `<link rel="stylesheet" href="/style.css" />` — add that line to any new view. Keep the look minimal and classy: warm off-white, Georgia serif, muted gold accent, no frameworks.
-- `package.json` metadata (description, repo URLs) refers to a "grocery-inventory" project; it is stale.
+- `express.static` serves `public/`, which holds the single stylesheet `public/style.css` (plain CSS, CSS variables in `:root`, one declaration per line, sectioned with comments). Every view links it in `<head>` via `<link rel="stylesheet" href="/style.css" />` — add that line to any new view, and `<%- include('../partials/nav') %>` (shared nav in `views/partials/nav.ejs`; use `partials/nav` from top-level views like `home.ejs` and `error.ejs`) instead of copying the nav markup. Keep the look minimal and classy: warm off-white, Georgia serif, muted gold accent, no frameworks.

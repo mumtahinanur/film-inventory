@@ -26,9 +26,12 @@ app.use("/", homeRouter);
 app.use("/films", filmsRouter);
 app.use("/genres", genresRouter);
 app.use("/directors", directorsRouter);
+app.use((req, res) => {
+  res.status(404).render("error", { message: "Page not found" });
+});
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).render("errors/500", { message: "Something went wrong" });
+  res.status(500).render("error", { message: "Something went wrong" });
 });
 
 app.listen(PORT, (error) => {

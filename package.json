@@ -1,7 +1,7 @@
 {
   "name": "film-tracker",
   "version": "1.0.0",
-  "description": "An Inventory management app for an imaginary store",
+  "description": "A film tracker for browsing and managing films, genres and directors",
   "homepage": "https://github.com/mumtahinanur/grocery-inventory#readme",
   "bugs": {
     "url": "https://github.com/mumtahinanur/grocery-inventory/issues"
