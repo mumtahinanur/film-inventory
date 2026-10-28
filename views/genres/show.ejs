@@ -21,10 +21,7 @@
         method="POST"
         onsubmit="return confirm('Delete this genre? Films will be kept but unlinked from it.');"
       >
-        <div class="field">
-          <label for="admin_password">Admin password</label>
-          <input type="password" id="admin_password" name="admin_password" required autocomplete="off" />
-        </div>
+        <%- include('../partials/adminPassword') %>
         <button type="submit">Delete Genre</button>
       </form>
 
@@ -40,7 +37,7 @@
         <% if (films.length === 0) { %>
         <div class="empty-message">No films found.</div>
         <% } else { %>
-        <ul class="film-list">
+        <ul>
           <% films.forEach(film => { %>
           <li class="film-item">
             <h2><a href="/films/<%= film.id %>"><%= film.title %></a></h2>

@@ -21,10 +21,7 @@
         method="POST"
         onsubmit="return confirm('Delete this film? This cannot be undone.');"
       >
-        <div class="field">
-          <label for="admin_password">Admin password</label>
-          <input type="password" id="admin_password" name="admin_password" required autocomplete="off" />
-        </div>
+        <%- include('../partials/adminPassword') %>
         <button type="submit">Delete Film</button>
       </form>
 

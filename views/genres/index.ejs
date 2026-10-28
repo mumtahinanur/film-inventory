@@ -17,12 +17,12 @@
       <% if (genres.length === 0) { %>
       <div class="empty-message">No genres found.</div>
       <% } else { %>
-      <ul class="genre-list">
+      <ul>
         <% genres.forEach(genre => { %>
         <li class="genre-item">
           <h2><a href="/genres/<%= genre.id %>"><%= genre.name %></a></h2>
           <% if (genre.description) { %>
-          <div class="genre-description"><%= genre.description %></div>
+          <div><%= genre.description %></div>
           <% } %>
         </li>
         <% }); %>

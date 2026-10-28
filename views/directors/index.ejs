@@ -17,12 +17,12 @@
       <% if (directors.length === 0) { %>
       <div class="empty-message">No directors found.</div>
       <% } else { %>
-      <ul class="director-list">
+      <ul>
         <% directors.forEach(director => { %>
         <li class="director-item">
           <h2><a href="/directors/<%= director.id %>"><%= director.name %></a></h2>
           <% if (director.bio) { %>
-          <div class="director-bio"><%= director.bio %></div>
+          <div><%= director.bio %></div>
           <% } %>
         </li>
         <% }); %>

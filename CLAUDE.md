@@ -28,12 +28,12 @@ Express 5 + EJS + `pg` (no ORM), ES modules (`"type": "module"`), server-rendere
 
 Edits and deletes are gated by one shared secret, `ADMIN_PASSWORD`; creating stays open. Fails closed: if unset, every protected action is rejected (`app.js` logs a warning at startup). `npm start` doesn't load `.env`, so set it in the environment there.
 
-- Edit (`POST`/`PUT` on `/:id`, `/:id/edit`): `validateAdminPassword` from `validators/adminValidator.js` comes first in the validator chain, so a wrong password re-renders the edit form (400) with the user's input kept and an "Incorrect admin password." error.
-- Delete (`POST /:id/delete`, `DELETE /:id`): `middleware/requireAdminPassword.js` renders `error` with 403.
+- Edit (`POST /:id/edit`): `validateAdminPassword` from `validators/adminValidator.js` comes first in the validator chain, so a wrong password re-renders the edit form (400) with the user's input kept and an "Incorrect admin password." error.
+- Delete (`POST /:id/delete`): `middleware/requireAdminPassword.js` renders `error` with 403.
 - Both use `isAdminPassword` (SHA-256 digests + `timingSafeEqual`) and read the `admin_password` body field.
-- Views: each `show.ejs` delete form has the password input; edit forms (shared `new.ejs`) show it only when the controller's `editFormOptions` sets `requirePassword: true`. Any new edit/delete route must use these guards.
+- Views: the password field is the shared partial `views/partials/adminPassword.ejs` (`<%- include('../partials/adminPassword') %>`); include it, don't copy it. Each `show.ejs` delete form has it; edit forms (shared `new.ejs`) show it only when the controller's `editFormOptions` sets `requirePassword: true`. Any new edit/delete route must use these guards.
 
 ## Known state / gotchas
 
-- HTML forms can't send PUT/DELETE and no method-override middleware is installed, so all three resources use POST routes for browser forms: `POST /<x>/:id/edit` (update) and `POST /<x>/:id/delete` (delete, redirects to the index, 404 via `error` view if missing). The `PUT /:id` and `DELETE /:id` routes map to the same controllers but aren't used by the views. Deleting a film, genre or director relies on `ON DELETE CASCADE` for the join tables; deleting a genre/director only unlinks it from films, the films stay.
+- HTML forms can't send PUT/DELETE and no method-override middleware is installed, so all three resources use POST routes for browser forms: `POST /<x>/:id/edit` (update) and `POST /<x>/:id/delete` (delete, redirects to the index, 404 via `error` view if missing). Deleting a film, genre or director relies on `ON DELETE CASCADE` for the join tables; deleting a genre/director only unlinks it from films, the films stay.
 - `express.static` serves `public/`, which holds the single stylesheet `public/style.css` (plain CSS, CSS variables in `:root`, one declaration per line, sectioned with comments). Every view links it in `<head>` via `<link rel="stylesheet" href="/style.css" />` — add that line to any new view, and `<%- include('../partials/nav') %>` (shared nav in `views/partials/nav.ejs`; use `partials/nav` from top-level views like `home.ejs` and `error.ejs`) instead of copying the nav markup. Keep the look minimal and classy: warm off-white, Georgia serif, muted gold accent, no frameworks.

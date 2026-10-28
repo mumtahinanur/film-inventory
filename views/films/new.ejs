@@ -68,10 +68,7 @@
         </fieldset>
 
         <% if (locals.requirePassword) { %>
-        <div class="field">
-          <label for="admin_password">Admin password</label>
-          <input type="password" id="admin_password" name="admin_password" required autocomplete="off" />
-        </div>
+        <%- include('../partials/adminPassword') %>
         <% } %>
 
         <button type="submit"><%= locals.submitLabel ?? 'Add Film' %></button>

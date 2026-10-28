@@ -17,7 +17,7 @@
       <% if (films.length === 0) { %>
       <div class="empty-message">No films found.</div>
       <% } else { %>
-      <ul class="film-list">
+      <ul>
         <% films.forEach(film => { %>
         <li class="film-item">
           <h2><a href="/films/<%= film.id %>"><%= film.title %></a></h2>
@@ -25,7 +25,7 @@
             <strong>Release Year:</strong> <%= film.release_year %> | <strong>Runtime:</strong> <%= film.runtime_minutes %> minutes
           </div>
           <% if (film.description) { %>
-          <div class="film-description"><%= film.description %></div>
+          <div><%= film.description %></div>
           <% } %>
           <% if (film.directors && film.directors.length > 0) { %>
           <div class="tags">

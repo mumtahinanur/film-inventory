@@ -15,7 +15,5 @@ router.post("/", validateDirector, directorsController.createDirector);
 router.post("/:id/edit", validateAdminPassword, validateDirector, directorsController.updateDirector);
 // HTML forms can't send DELETE, so the delete button POSTs to /:id/delete
 router.post("/:id/delete", requireAdminPassword, directorsController.deleteDirector);
-router.put("/:id", validateAdminPassword, validateDirector, directorsController.updateDirector);
-router.delete("/:id", requireAdminPassword, directorsController.deleteDirector);
 
 export default router;
