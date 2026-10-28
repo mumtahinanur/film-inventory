@@ -55,6 +55,7 @@ function editFormOptions(id) {
     submitLabel: "Save Changes",
     backHref: `/films/${id}`,
     backLabel: "← Back to Film",
+    requirePassword: true,
   };
 }
 

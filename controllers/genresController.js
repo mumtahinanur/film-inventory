@@ -43,6 +43,7 @@ function editFormOptions(id) {
     submitLabel: "Save Changes",
     backHref: `/genres/${id}`,
     backLabel: "← Back to Genre",
+    requirePassword: true,
   };
 }
 

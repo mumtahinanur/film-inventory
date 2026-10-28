@@ -43,6 +43,7 @@ function editFormOptions(id) {
     submitLabel: "Save Changes",
     backHref: `/directors/${id}`,
     backLabel: "← Back to Director",
+    requirePassword: true,
   };
 }
 

@@ -26,6 +26,10 @@
         method="POST"
         onsubmit="return confirm('Delete this genre? Films will be kept but unlinked from it.');"
       >
+        <div class="field">
+          <label for="admin_password">Admin password</label>
+          <input type="password" id="admin_password" name="admin_password" required autocomplete="off" />
+        </div>
         <button type="submit">Delete Genre</button>
       </form>
 

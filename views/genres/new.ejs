@@ -38,6 +38,13 @@
           <textarea id="description" name="description" rows="4"><%= values.description ?? '' %></textarea>
         </div>
 
+        <% if (locals.requirePassword) { %>
+        <div class="field">
+          <label for="admin_password">Admin password</label>
+          <input type="password" id="admin_password" name="admin_password" required autocomplete="off" />
+        </div>
+        <% } %>
+
         <button type="submit"><%= locals.submitLabel ?? 'Add Genre' %></button>
       </form>
     </div>

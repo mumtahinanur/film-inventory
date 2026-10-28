@@ -1,5 +1,7 @@
 import { Router } from "express";
 import * as directorsController from "../controllers/directorsController.js";
+import { requireAdminPassword } from "../middleware/requireAdminPassword.js";
+import { validateAdminPassword } from "../validators/adminValidator.js";
 import { validateDirector } from "../validators/directorValidator.js";
 
 const router = Router();
@@ -10,10 +12,10 @@ router.get("/:id", directorsController.getDirectorById);
 router.get("/:id/edit", directorsController.editDirectorForm);
 router.post("/", validateDirector, directorsController.createDirector);
 // HTML forms can't send PUT, so the edit form POSTs to /:id/edit
-router.post("/:id/edit", validateDirector, directorsController.updateDirector);
+router.post("/:id/edit", validateAdminPassword, validateDirector, directorsController.updateDirector);
 // HTML forms can't send DELETE, so the delete button POSTs to /:id/delete
-router.post("/:id/delete", directorsController.deleteDirector);
-router.put("/:id", validateDirector, directorsController.updateDirector);
-router.delete("/:id", directorsController.deleteDirector);
+router.post("/:id/delete", requireAdminPassword, directorsController.deleteDirector);
+router.put("/:id", validateAdminPassword, validateDirector, directorsController.updateDirector);
+router.delete("/:id", requireAdminPassword, directorsController.deleteDirector);
 
 export default router;

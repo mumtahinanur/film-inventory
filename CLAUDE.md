@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `node db/populatedb.js <connection-string>` — create tables (idempotent) and seed dummy data only if `films` is empty
 - No test or lint tooling is configured.
 
-Requires a `.env` with `PORT` (default 8000) and `DATABASE_URL` (PostgreSQL).
+Requires a `.env` with `PORT` (default 8000), `DATABASE_URL` (PostgreSQL) and `ADMIN_PASSWORD` (see Admin password below).
 
 ## Architecture
 
@@ -22,6 +22,15 @@ Express 5 + EJS + `pg` (no ORM), ES modules (`"type": "module"`), server-rendere
 - Schema: `films`, `genres`, `directors`, with many-to-many join tables `film_genres` and `film_directors` (`ON DELETE CASCADE`). Schema lives only in `db/populatedb.js`.
 - Form pattern (see `filmsController.createFilm`): on validation failure, re-render the `new` view with status 400, the submitted `values`, and a de-duplicated `errors` array of messages; on success use `matchedData(req)` (sanitized/typed values) and redirect to the show page.
 - Express 5 handles rejected promises from async handlers automatically, so controllers don't wrap in try/catch.
+
+## Admin password (stopgap until real users)
+
+Edits and deletes are gated by one shared secret, `ADMIN_PASSWORD`; creating stays open. Fails closed: if unset, every protected action is rejected (`app.js` logs a warning at startup). `npm start` doesn't load `.env`, so set it in the environment there.
+
+- Edit (`POST`/`PUT` on `/:id`, `/:id/edit`): `validateAdminPassword` from `validators/adminValidator.js` comes first in the validator chain, so a wrong password re-renders the edit form (400) with the user's input kept and an "Incorrect admin password." error.
+- Delete (`POST /:id/delete`, `DELETE /:id`): `middleware/requireAdminPassword.js` renders `error` with 403.
+- Both use `isAdminPassword` (SHA-256 digests + `timingSafeEqual`) and read the `admin_password` body field.
+- Views: each `show.ejs` delete form has the password input; edit forms (shared `new.ejs`) show it only when the controller's `editFormOptions` sets `requirePassword: true`. Any new edit/delete route must use these guards.
 
 ## Known state / gotchas
 

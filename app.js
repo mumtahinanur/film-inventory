@@ -9,6 +9,10 @@ const app = express();
 
 const PORT = process.env.PORT || 8000;
 
+if (!process.env.ADMIN_PASSWORD) {
+  console.warn("ADMIN_PASSWORD is not set: all edits and deletes will be rejected.");
+}
+
 // View engine setup
 app.set("views", path.join(import.meta.dirname, "views"));
 app.set("view engine", "ejs");
