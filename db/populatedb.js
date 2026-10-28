@@ -1,5 +1,7 @@
 import { Client } from "pg";
 
+// Schema. IF NOT EXISTS makes it safe to re-run. This is the only place the
+// schema is defined.
 const SQL = `
   CREATE TABLE IF NOT EXISTS genres (
     id          INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -35,6 +37,8 @@ const SQL = `
   );
 `;
 
+// Dummy data, inserted only when films is empty (see main). The join tables are
+// filled by matching titles/names so no ids are hardcoded.
 const SEED_SQL = `
   INSERT INTO genres (name, description) VALUES
     ('Drama', 'Character-driven stories dealing with serious, emotional themes.'),

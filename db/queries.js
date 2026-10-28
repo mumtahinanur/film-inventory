@@ -1,5 +1,8 @@
 import pool from "./pool.js";
 
+// Base query for reading films. Genres and directors are folded into JSON arrays
+// by subqueries (COALESCE gives [] when there are none), so each film is exactly
+// one row. Append a WHERE/ORDER BY clause.
 const FILM_SELECT = `
   SELECT
     f.id,
@@ -91,6 +94,8 @@ export async function getFilmsByDirectorId(id) {
   return rows;
 }
 
+// Film row and join-table rows are written in one transaction so a failure
+// can't leave a film half-linked
 export async function createFilm({ title, description, releaseYear, runtimeMinutes, genreIds, directorIds }) {
   const client = await pool.connect();
   try {
@@ -140,6 +145,7 @@ export async function updateFilm(id, { title, description, releaseYear, runtimeM
       await client.query("ROLLBACK");
       return false;
     }
+    // Relinking = wipe this film's join rows and re-insert the submitted ones
     await client.query("DELETE FROM film_genres WHERE film_id = $1", [id]);
     await client.query("DELETE FROM film_directors WHERE film_id = $1", [id]);
     if (genreIds.length > 0) {
@@ -172,6 +178,8 @@ export async function deleteFilm(id) {
   return rowCount > 0;
 }
 
+// Case-insensitive duplicate check. excludeId lets an edit keep its own name
+// (null on create).
 export async function genreNameExists(name, excludeId = null) {
   const { rows } = await pool.query(
     "SELECT 1 FROM genres WHERE LOWER(name) = LOWER($1) AND ($2::int IS NULL OR id <> $2)",

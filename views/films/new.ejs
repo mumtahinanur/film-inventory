@@ -1,3 +1,6 @@
+<%# Shared by create and edit. Edit mode is switched on by the controller passing
+    heading/action/... (see editFormOptions); the locals.* defaults below are the
+    create-mode values. -%>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -15,11 +18,11 @@
       <h1><%= locals.heading ?? 'Add a Film' %></h1>
 
       <% if (errors.length > 0) { %>
-      <ul class="errors">
-        <% errors.forEach(error => { %>
-        <li><%= error %></li>
-        <% }); %>
-      </ul>
+        <ul class="errors">
+          <% errors.forEach(error => { %>
+            <li><%= error %></li>
+          <% }); %>
+        </ul>
       <% } %>
 
       <%
@@ -50,25 +53,25 @@
         <fieldset class="field">
           <legend>Genres</legend>
           <% genres.forEach(genre => { %>
-          <label>
-            <input type="checkbox" name="genre_ids" value="<%= genre.id %>" <%= selectedGenres.includes(String(genre.id)) ? 'checked' : '' %> />
-            <%= genre.name %>
-          </label>
+            <label>
+              <input type="checkbox" name="genre_ids" value="<%= genre.id %>" <%= selectedGenres.includes(String(genre.id)) ? 'checked' : '' %> />
+              <%= genre.name %>
+            </label>
           <% }); %>
         </fieldset>
 
         <fieldset class="field">
           <legend>Directors</legend>
           <% directors.forEach(director => { %>
-          <label>
-            <input type="checkbox" name="director_ids" value="<%= director.id %>" <%= selectedDirectors.includes(String(director.id)) ? 'checked' : '' %> />
-            <%= director.name %>
-          </label>
+            <label>
+              <input type="checkbox" name="director_ids" value="<%= director.id %>" <%= selectedDirectors.includes(String(director.id)) ? 'checked' : '' %> />
+              <%= director.name %>
+            </label>
           <% }); %>
         </fieldset>
 
         <% if (locals.requirePassword) { %>
-        <%- include('../partials/adminPassword') %>
+          <%- include('../partials/adminPassword') %>
         <% } %>
 
         <button type="submit"><%= locals.submitLabel ?? 'Add Film' %></button>

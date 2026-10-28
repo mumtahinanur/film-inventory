@@ -26,9 +26,11 @@ app.use("/", homeRouter);
 app.use("/films", filmsRouter);
 app.use("/genres", genresRouter);
 app.use("/directors", directorsRouter);
+// Only reached when no router matched, so it must stay after the routers
 app.use((req, res) => {
   res.status(404).render("error", { message: "Page not found" });
 });
+// Express recognises error handlers by their four arguments, so keep `next` even though it's unused
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).render("error", { message: "Something went wrong" });

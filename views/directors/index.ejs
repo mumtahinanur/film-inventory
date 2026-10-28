@@ -15,18 +15,18 @@
       <a href="/directors/new" class="add-link">+ Add a director</a>
 
       <% if (directors.length === 0) { %>
-      <div class="empty-message">No directors found.</div>
+        <div class="empty-message">No directors found.</div>
       <% } else { %>
-      <ul>
-        <% directors.forEach(director => { %>
-        <li class="director-item">
-          <h2><a href="/directors/<%= director.id %>"><%= director.name %></a></h2>
-          <% if (director.bio) { %>
-          <div><%= director.bio %></div>
-          <% } %>
-        </li>
-        <% }); %>
-      </ul>
+        <ul>
+          <% directors.forEach(director => { %>
+            <li class="director-item">
+              <h2><a href="/directors/<%= director.id %>"><%= director.name %></a></h2>
+              <% if (director.bio) { %>
+                <div><%= director.bio %></div>
+              <% } %>
+            </li>
+          <% }); %>
+        </ul>
       <% } %>
     </div>
   </body>

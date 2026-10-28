@@ -11,9 +11,9 @@ router.get("/new", directorsController.newDirectorForm);
 router.get("/:id", directorsController.getDirectorById);
 router.get("/:id/edit", directorsController.editDirectorForm);
 router.post("/", validateDirector, directorsController.createDirector);
-// HTML forms can't send PUT, so the edit form POSTs to /:id/edit
+// Browser forms can only send GET/POST, so edit and delete are POST routes.
+// The admin password check runs first, before validation or any database change.
 router.post("/:id/edit", validateAdminPassword, validateDirector, directorsController.updateDirector);
-// HTML forms can't send DELETE, so the delete button POSTs to /:id/delete
 router.post("/:id/delete", requireAdminPassword, directorsController.deleteDirector);
 
 export default router;

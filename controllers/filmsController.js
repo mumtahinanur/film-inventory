@@ -14,6 +14,8 @@ export async function getFilmById(req, res) {
   res.render("films/show", { film });
 }
 
+// Renders the shared films/new view, used for both create and edit. Extra options
+// (heading, action, ...) switch it into edit mode.
 async function renderFilmForm(res, { values = {}, errors = [], status = 200, ...formOptions } = {}) {
   const [genres, directors] = await Promise.all([
     queries.getAllGenres(),
@@ -37,6 +39,8 @@ export async function createFilm(req, res) {
   }
 
   const data = matchedData(req);
+  // Set drops duplicate ids; `|| null` / `?? null` store empty form values as NULL
+  // rather than ''
   const filmId = await queries.createFilm({
     title: data.title,
     description: data.description || null,
@@ -48,6 +52,8 @@ export async function createFilm(req, res) {
   res.redirect(`/films/${filmId}`);
 }
 
+// View options that turn films/new into the edit form; requirePassword shows the
+// admin password field
 function editFormOptions(id) {
   return {
     heading: "Edit Film",
@@ -98,6 +104,7 @@ export async function updateFilm(req, res) {
     genreIds: [...new Set(data.genre_ids)],
     directorIds: [...new Set(data.director_ids)],
   });
+  // updateFilm returns false when no row matched the id
   if (!updated) {
     return res.status(404).render("error", { message: "Film not found" });
   }

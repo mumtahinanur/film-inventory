@@ -15,37 +15,37 @@
       <a href="/films/new" class="add-link">+ Add a film</a>
 
       <% if (films.length === 0) { %>
-      <div class="empty-message">No films found.</div>
+        <div class="empty-message">No films found.</div>
       <% } else { %>
-      <ul>
-        <% films.forEach(film => { %>
-        <li class="film-item">
-          <h2><a href="/films/<%= film.id %>"><%= film.title %></a></h2>
-          <div class="film-meta">
-            <strong>Release Year:</strong> <%= film.release_year %> | <strong>Runtime:</strong> <%= film.runtime_minutes %> minutes
-          </div>
-          <% if (film.description) { %>
-          <div><%= film.description %></div>
-          <% } %>
-          <% if (film.directors && film.directors.length > 0) { %>
-          <div class="tags">
-            <strong>Directors:</strong>
-            <% film.directors.forEach(director => { %>
-            <a href="/directors/<%= director.id %>" class="tag"><%= director.name %></a>
-            <% }); %>
-          </div>
-          <% } %>
-          <% if (film.genres && film.genres.length > 0) { %>
-          <div class="tags">
-            <strong>Genres:</strong>
-            <% film.genres.forEach(genre => { %>
-            <a href="/genres/<%= genre.id %>" class="tag"><%= genre.name %></a>
-            <% }); %>
-          </div>
-          <% } %>
-        </li>
-        <% }); %>
-      </ul>
+        <ul>
+          <% films.forEach(film => { %>
+            <li class="film-item">
+              <h2><a href="/films/<%= film.id %>"><%= film.title %></a></h2>
+              <div class="film-meta">
+                <strong>Release Year:</strong> <%= film.release_year %> | <strong>Runtime:</strong> <%= film.runtime_minutes %> minutes
+              </div>
+              <% if (film.description) { %>
+                <div><%= film.description %></div>
+              <% } %>
+              <% if (film.directors && film.directors.length > 0) { %>
+                <div class="tags">
+                  <strong>Directors:</strong>
+                  <% film.directors.forEach(director => { %>
+                    <a href="/directors/<%= director.id %>" class="tag"><%= director.name %></a>
+                  <% }); %>
+                </div>
+              <% } %>
+              <% if (film.genres && film.genres.length > 0) { %>
+                <div class="tags">
+                  <strong>Genres:</strong>
+                  <% film.genres.forEach(genre => { %>
+                    <a href="/genres/<%= genre.id %>" class="tag"><%= genre.name %></a>
+                  <% }); %>
+                </div>
+              <% } %>
+            </li>
+          <% }); %>
+        </ul>
       <% } %>
     </div>
   </body>

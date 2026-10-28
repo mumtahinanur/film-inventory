@@ -36,6 +36,8 @@ export async function createGenre(req, res) {
   res.redirect(`/genres/${genreId}`);
 }
 
+// View options that turn genres/new into the edit form; requirePassword shows the
+// admin password field
 function editFormOptions(id) {
   return {
     heading: "Edit Genre",

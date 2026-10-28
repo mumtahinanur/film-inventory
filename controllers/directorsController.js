@@ -36,6 +36,8 @@ export async function createDirector(req, res) {
   res.redirect(`/directors/${directorId}`);
 }
 
+// View options that turn directors/new into the edit form; requirePassword shows the
+// admin password field
 function editFormOptions(id) {
   return {
     heading: "Edit Director",

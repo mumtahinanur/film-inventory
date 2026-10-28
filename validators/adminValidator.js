@@ -1,7 +1,9 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { body } from "express-validator";
 
-const digest = (value) => createHash("sha256").update(String(value)).digest();
+// Hashing both sides gives equal-length buffers, which timingSafeEqual requires.
+// It is not password storage.
+const digest =(value) => createHash("sha256").update(String(value)).digest();
 
 // Fails closed: with no ADMIN_PASSWORD configured, nothing matches.
 export function isAdminPassword(value) {
@@ -11,6 +13,8 @@ export function isAdminPassword(value) {
   return timingSafeEqual(digest(value ?? ""), digest(secret));
 }
 
-export const validateAdminPassword = body("admin_password")
+// For edit routes: a failure joins the normal validation errors so the form
+// re-renders with the user's input kept
+export const validateAdminPassword =body("admin_password")
   .custom(isAdminPassword)
   .withMessage("Incorrect admin password.");
